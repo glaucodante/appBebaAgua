@@ -1,0 +1,10 @@
+Fórmula App Beba Água
+
+Até 17 anos     40ml por cada Kg
+18 a 55 anos    35ml por cada Kg
+56 a 65 anos    30ml por cada Kg
+Mais de 65 nos  25ml por cada Kg
+
+é necessário multiplicar o peso em Kg pela quantidade de ML
+para obter o resultado em ML, 
+-75 x 35 = 2.450 ml ou 2 litros e 450 ml.
