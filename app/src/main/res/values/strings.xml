@@ -8,4 +8,6 @@
     <string name="Text_hour">00</string>
     <string name="Text_dois_pontos">:</string>
     <string name="Text_min">00</string>
+    <string name="toast_informe_peso">Informe seu peso!</string>
+    <string name="toast_informe_idade">Informe sua idade!</string>
 </resources>
