@@ -51,7 +51,7 @@ pelo usuário a barra de rolagem -->
         android:gravity="center"
         android:hint="@string/hint_peso"
         android:inputType="numberDecimal"
-        android:maxLength="5"
+        android:maxLength="7"
         android:padding="15dp"
         android:textColor="@android:color/holo_blue_dark"
         android:textColorHint="@android:color/holo_blue_dark"

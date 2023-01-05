@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import com.example.bebagua_lembrete.databinding.ActivityMainBinding
 import com.example.bebagua_lembrete.model.CalcularIngestaoDiaria
 import org.w3c.dom.Text
 import java.text.NumberFormat
@@ -16,16 +17,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var edit_peso: EditText
-    private lateinit var edit_idade: EditText
-    private lateinit var bt_calcular: Button
-    private lateinit var txt_result_ml: TextView
-    private lateinit var bt_define_reminder: Button
-    private lateinit var ic_define_data: ImageView
-    private lateinit var bt_reminder: Button
-    private lateinit var bt_alarm: Button
-    private lateinit var txt_hour: TextView
-    private lateinit var txt_min: TextView
+    private lateinit var binding: ActivityMainBinding
 
     private lateinit var calcularIngestaoDiaria: CalcularIngestaoDiaria
     private var resultMl = 0.0
@@ -38,40 +30,48 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 //  Escondendo a BARRA DE AÇÃO
         supportActionBar!!.hide()
 
-        IniciarComponentes()
+//        IniciarComponentes()
         calcularIngestaoDiaria = CalcularIngestaoDiaria()
 
+    val bt_calcular = binding.btCalcular
+
         bt_calcular.setOnClickListener {
-            if (edit_peso.text.toString().isEmpty()) {
+            if (binding.editPeso.text.toString().isEmpty()) {
                 Toast.makeText(this, R.string.toast_informe_peso, Toast.LENGTH_SHORT).show()
-            } else if (edit_idade.text.toString().isEmpty()) {
+            } else if (binding.editIdade.text.toString().isEmpty()) {
                 Toast.makeText(this, R.string.toast_informe_idade, Toast.LENGTH_SHORT).show()
             } else {
-                val peso = edit_peso.text.toString().toDouble()
-                val idade = edit_idade.text.toString().toInt()
+                val peso = binding.editPeso.text.toString().toDouble()
+
+                val idade = binding.editIdade.text.toString().toInt()
+
                 calcularIngestaoDiaria.CalcularTotalML(peso, idade)
                 resultMl = calcularIngestaoDiaria.ResultMl()
 //  getNumberInstance() = formatar o numero (colocar uma virgula) com base na localida
                 val format = NumberFormat.getNumberInstance(Locale("pt", "BR"))
                 format.isGroupingUsed = false // por padrao vem true
-                txt_result_ml.text = format.format(resultMl) + " " + "ml"
+                binding.txtResultMl.text = format.format(resultMl) + " " + "ml"
+
             }
         }
 
+        // val ic_define_data = binding.icRedefinir // OU
+
         // criando tela de Alert (informaçoes)
-        ic_define_data.setOnClickListener {
+        binding.icRedefinir.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this)
             alertDialog.setTitle(R.string.dialog_title)
                 .setMessage(R.string.dialog_desc)
                     //Criando o botão positivo
                 .setPositiveButton("Ok") { dialogInterface, i ->
-                    edit_peso.setText("") // Limpando os campos
-                    edit_idade.setText("")
-                    txt_result_ml.text = ""
+                    binding.editPeso.setText("") // Limpando os campos
+                    binding.editIdade.setText("")
+                    binding.txtResultMl.text = ""
                 }
             alertDialog.setNegativeButton("Cancelar") { dialogInterface, i ->
                 // ficará em branco, pois caso o usuário clique em cancelar não acontecerá nada
@@ -81,18 +81,22 @@ class MainActivity : AppCompatActivity() {
             dialog.show()
         }
 // Criando o método do LEMBRETE
-        bt_define_reminder.setOnClickListener {
+        binding.btDefineReminder.setOnClickListener {
             calendar = Calendar.getInstance() // recuperandoa instância
             currentTime = calendar.get(Calendar.HOUR_OF_DAY) // pegando a hora do dia
             currentMinute = calendar.get(Calendar.MINUTE)
             timePickerDialog = TimePickerDialog(this, {timePicker: TimePicker, hourOfDay: Int, minutes: Int ->
-                txt_hour.text = String.format("%02d", hourOfDay) // %02d = é padrão do formato da hora
-                txt_min.text = String.format("%02d", minutes)
+                binding.txtHour.text = String.format("%02d", hourOfDay) // %02d = é padrão do formato da hora
+                binding.txtMin.text = String.format("%02d", minutes)
             }, currentTime, currentMinute, true) // para o formato 24h colocar true
             timePickerDialog.show()
         }
 
-    bt_alarm.setOnClickListener {
+    binding.btAlarm.setOnClickListener {
+
+        val txt_hour = binding.txtHour
+        val txt_min = binding.txtMin
+
         if (!txt_hour.text.toString().isEmpty() && !txt_min.text.toString().isEmpty()) {
             val intent = Intent(AlarmClock.ACTION_SET_ALARM)
             intent.putExtra(AlarmClock.EXTRA_HOUR, txt_hour.text.toString().toInt())
@@ -109,20 +113,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     }
-    private fun IniciarComponentes() {
-        edit_peso = findViewById(R.id.edit_peso)
-        edit_idade = findViewById(R.id.edit_idade)
-        bt_calcular = findViewById(R.id.bt_calcular)
-        txt_result_ml = findViewById(R.id.txt_result_ml)
-        bt_define_reminder = findViewById(R.id.bt_define_reminder)
-        ic_define_data = findViewById(R.id.ic_redefinir)
-        bt_reminder = findViewById(R.id.bt_define_reminder)
-        bt_alarm = findViewById(R.id.bt_alarm)
-        txt_hour = findViewById(R.id.txt_hour)
-        txt_min = findViewById(R.id.txt_min)
-
-    }
-
-
 
 }
+
+
+//    private lateinit var edit_peso: EditText
+//    private lateinit var edit_idade: EditText
+//    private lateinit var bt_calcular: Button
+//    private lateinit var txt_result_ml: TextView
+//    private lateinit var bt_define_reminder: Button
+//    private lateinit var ic_define_data: ImageView
+//    private lateinit var bt_reminder: Button
+//    private lateinit var bt_alarm: Button
+//    private lateinit var txt_hour: TextView
+//    private lateinit var txt_min: TextView
